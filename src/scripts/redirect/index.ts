@@ -58,6 +58,7 @@ class App {
     }
 
     redirection &&= this.#ensure(redirection.trim())
+    redirection &&= this.#normalize(redirection)
     return redirection
   }
 
@@ -73,6 +74,17 @@ class App {
       url = protocol + '//' + url
     }
     return url
+  }
+
+  #normalize(url: string): Location['href'] {
+    try {
+      const urlObj = new URL(url)
+      urlObj.pathname = urlObj.pathname.replace(/\/+/g, '/')
+      return urlObj.href
+    } catch (error) {
+      warn(error)
+      return url
+    }
   }
 }
 
